@@ -5,7 +5,7 @@ import gal.uvigo.esei.aed1.cubirds.iu.IU;
 import es.uvigo.esei.aed1.tads.list.List;
 
 public class Game {
-
+ 
     // Atributos
     private IU iu;
     private DeckOfCards deck;
@@ -26,6 +26,7 @@ public class Game {
      * Inicializa los jugadores preguntando cantidad y nombres.
      * Los jugadores se almacenan directamente en this.players.
      */
+
     private void inicializarJugadores() {
         int numJugadores;
 
