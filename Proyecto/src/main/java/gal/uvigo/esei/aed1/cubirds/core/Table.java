@@ -69,10 +69,20 @@ public class Table {
         List<Card> row = filas[rowIndex];
         TypeBird species = cardsToPlay.get(0).getTypeBird();
 
-        boolean hasSameTypeBird = false;
-        for (int i = 0; i < row.size() && !hasSameTypeBird; i++) {
-            if (row.get(i).getTypeBird() == species) {
-                hasSameTypeBird = true;
+        int oldSize = row.size();
+        int matchIndex = -1;
+
+        if (placeLeft) {
+            for (int i = 0; i < oldSize && matchIndex == -1; i++) {
+                if (row.get(i).getTypeBird() == species) {
+                    matchIndex = i;
+                }
+            }
+        } else {
+            for (int i = oldSize - 1; i >= 0 && matchIndex == -1; i--) {
+                if (row.get(i).getTypeBird() == species) {
+                    matchIndex = i;
+                }
             }
         }
 
@@ -86,21 +96,19 @@ public class Table {
             }
         }
 
-        if (hasSameTypeBird) {
-            int firstPos = -1;
-            int lastPos = -1;
-
-            for (int i = 0; i < row.size(); i++) {
-                if (row.get(i).getTypeBird() == species) {
-                    if (firstPos == -1) {
-                        firstPos = i;
-                    }
-                    lastPos = i;
+        if (matchIndex != -1) {
+            if (placeLeft && matchIndex > 0) {
+                int removeStart = cardsToPlay.size();
+                int removeEnd = cardsToPlay.size() + matchIndex - 1;
+                for (int i = removeEnd; i >= removeStart; i--) {
+                    capturedCards.addFirst(row.remove(i));
                 }
             }
 
-            if (firstPos + 1 < lastPos) {
-                for (int i = lastPos - 1; i > firstPos; i--) {
+            if (!placeLeft && matchIndex < oldSize - 1) {
+                int removeStart = matchIndex + 1;
+                int removeEnd = oldSize - 1;
+                for (int i = removeEnd; i >= removeStart; i--) {
                     capturedCards.addFirst(row.remove(i));
                 }
             }

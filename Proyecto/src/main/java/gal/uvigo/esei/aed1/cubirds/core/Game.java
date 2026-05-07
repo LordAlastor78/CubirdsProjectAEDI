@@ -5,7 +5,7 @@ import gal.uvigo.esei.aed1.cubirds.iu.IU;
 import es.uvigo.esei.aed1.tads.list.List;
 
 public class Game {
- 
+
     // Atributos
     private IU iu;
     private DeckOfCards deck;
@@ -144,15 +144,19 @@ public class Game {
         do {
             Player currentPlayer = players[currentPlayerIndex];
 
-            // Ejecutar turno del jugador actual
-
-            executePlayerTurn(currentPlayer);
-
-            // Verificar condición de fin de juego (ej: un jugador se queda sin sus oniichan
-            // cartas)
             if (currentPlayer.hasNoCards()) {
                 iu.displayMessage(currentPlayer.getName() + " Ha ganado la partida!");
                 gameFinished = true;
+            } else {
+                // Ejecutar turno del jugador actual
+                executePlayerTurn(currentPlayer);
+
+                // Verificar condición de fin de juego (ej: un jugador se queda sin sus oniichan
+                // cartas)
+                if (currentPlayer.hasNoCards()) {
+                    iu.displayMessage(currentPlayer.getName() + " Ha ganado la partida!");
+                    gameFinished = true;
+                }
             }
 
             if (!gameFinished) {
