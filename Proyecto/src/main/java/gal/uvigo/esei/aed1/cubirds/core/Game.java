@@ -21,12 +21,8 @@ public class Game {
                              // inicializarJugadores()
     }
 
-    /**
-     * brief
-     * Inicializa los jugadores preguntando cantidad y nombres.
-     * Los jugadores se almacenan directamente en this.players.
-     */
-
+    // Inicializa los jugadores preguntando cantidad y nombres.
+    // Los jugadores se almacenan directamente en this.players
     private void inicializarJugadores() {
         int numJugadores;
 
@@ -57,9 +53,7 @@ public class Game {
         iu.displayMessage(numJugadores + " jugadores creados. ");
     }
 
-    /**
-     * Reparte 8 cartas a cada jugador desde el mazo y ordena sus manos por especie.
-     */
+    // Reparte 8 cartas a cada jugador desde el mazo y ordena sus manos por especie.
     private void repartirCartas() {
         iu.displayMessage("Repartiendo cartas...");
 
@@ -73,9 +67,7 @@ public class Game {
         iu.displayMessage("Reparto completado. Cada jugador tiene 8 cartas.");
     }
 
-    /**
-     * Muestra el estado inicial: mesa y manos de todos los jugadores.
-     */
+    // Muestra el estado inicial: mesa y manos de todos los jugadores.
     private void mostrarEstadoInicial() {
         iu.displayMessage("\n========================================");
         iu.displayMessage("ESTADO INICIAL DEL JUEGO");
@@ -93,6 +85,8 @@ public class Game {
         iu.displayMessage("========================================\n");
     }
 
+    // Los tres métodos siguientes llaman a la iu, con elegirTipo recibiendo el
+    // jugador como parámetro.
     private TypeBird elegirTipo(Player player) {
         return iu.chooseBirdType(player.getPlayableSpecies());
     }
@@ -105,6 +99,8 @@ public class Game {
         return iu.chooseSide();
     }
 
+    // Recibe un jugador como parámetro y llama a todas las funciones necesarias
+    // para ejecutar su turno.
     public void executePlayerTurn(Player player) {
         iu.displayMessage("Turno del jugador " + player.getName() + ": ");
         // Mostrar baraja del jugador
@@ -130,6 +126,7 @@ public class Game {
 
     }
 
+    // Método play para la ejecución de todo el juego.
     public void play() {
 
         // Inicializar el juego
@@ -160,11 +157,11 @@ public class Game {
             }
 
             if (!gameFinished) {
-                // El cálculo del siguiente índice funciona igual con .size() ,
+                // Cambia currentPlayerIndex para que sea el siguiente jugador.
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
 
-                // Pausa para que el jugador pueda ver el resultado de su turno antes de que el
-                // siguiente jugador comience
+                // Pausa para que el jugador pueda ver el resultado de su turno
+                // antes de que el siguiente jugador comience
                 iu.readString("\nPresiona cualquiera tecla para continuar...");
             }
         } while (!gameFinished);

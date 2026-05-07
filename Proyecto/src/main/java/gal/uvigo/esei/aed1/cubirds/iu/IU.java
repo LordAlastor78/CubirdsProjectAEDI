@@ -1,5 +1,24 @@
 package gal.uvigo.esei.aed1.cubirds.iu;
+/* 
+Cubirds Project
 
+
+░░░░░░░░▄▄▄▀▀▀▄▄███▄░░░░░░░░░░░░░░
+░░░░░▄▀▀░░░░░░░▐░▀██▌░░░░░░░░░░░░░
+░░░▄▀░░░░▄▄███░▌▀▀░▀█░░░░░░░░░░░░░
+░░▄█░░▄▀▀▒▒▒▒▒▄▐░░░░█▌░░░░░░░░░░░░
+░▐█▀▄▀▄▄▄▄▀▀▀▀▌░░░░░▐█▄░░░░░░░░░░░
+░▌▄▄▀▀░░░░░░░░▌░░░░▄███████▄░░░░░░
+░░░░░░░░░░░░░▐░░░░▐███████████▄░░░
+░░░░░le░░░░░░░▐░░░░▐█████████████▄
+░░░░toucan░░░░░░▀▄░░░▐█████████████▄ 
+░░░░░░has░░░░░░░░▀▄▄███████████████ 
+░░░░░arrived░░░░░░░░░░░░█▀██████░░
+
+
+
+
+*/
 import java.util.Scanner;
 
 import es.uvigo.esei.aed1.tads.list.List;
@@ -47,6 +66,8 @@ public class IU {
         System.out.println(msg);
     }
 
+    // Pide al jugador a que escoja un tipo específico de la lista de tipos pasada
+    // como parámetro.
     public TypeBird chooseBirdType(List<TypeBird> availableTypes) {
         int choice = -1;
 
@@ -54,6 +75,7 @@ public class IU {
             displayMessage("Escoge un tipo de pájaro válido:");
             for (int i = 0; i < availableTypes.size(); i++) {
                 displayMessage((i + 1) + ". " + availableTypes.get(i));
+                // display message con el número de opción y el tipo de pájaro correspondiente
             }
             choice = readNumber("");
         } while (choice < 1 || choice > availableTypes.size());
@@ -61,10 +83,13 @@ public class IU {
         return availableTypes.get(choice - 1);
     }
 
+    // Pide al jugador a que escoja una de las filas de la mesa.
     public int chooseRow(int rowCount) {
+
         int choice = -1;
 
-        do {
+        do { // lógica para el tema del input, se repite hasta que el jugador elige un número
+             // de fila válido.
             displayMessage("Elige una fila:");
             for (int i = 0; i < rowCount; i++) {
                 displayMessage((i + 1) + ". Fila " + (i + 1));
@@ -75,6 +100,7 @@ public class IU {
         return choice - 1;
     }
 
+    // Pide al jugador a que escoja poner las cartas por la derecha o por la izquierda.
     public boolean chooseSide() {
         int choice = -1;
 
