@@ -29,7 +29,7 @@ public class Game {
         int numJugadores;
 
         // Mostrar tucán decorativo antes de preguntar el número de jugadores
-        iu.displayMessage("       𝙲𝚄𝙱𝙸𝚁𝙳𝚂 𝙲𝙻𝙸 | GrupoG        ");
+        iu.displayMessage("       Cubirds CLI | GrupoG        ");
         iu.displayMessage("                                    ");
         iu.displayMessage("░░░░░░░░▄▄▄▀▀▀▄▄███▄░░░░░░░░░░░░░░░░");
         iu.displayMessage("░░░░░▄▀▀░░░░░░░▐░▀██▌░░░░░░░░░░░░░░░");
