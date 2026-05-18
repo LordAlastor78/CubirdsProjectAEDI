@@ -150,18 +150,106 @@ La sección siguiente lista las clases clave del paquete `core` y describe sus m
   - `boolean chooseSide()` — pide 1 izquierda, 2 derecha.
   - `boolean chooseYesNo(String message)` — pide 1 si, 2 no.
 
-Ejemplos y fragmentos de uso
-----------------------------
+Compilación y Ejecución — Guía Completa
+-------------------------------------------
+
+### Requisitos del sistema
+- **Java 17+** (OpenJDK 17, Eclipse Adoptium, u otra distribución)
+- **Maven 3.6+** (recomendado 3.9.x)
+- Ubicación: desde la carpeta `Proyecto/` (donde está `pom.xml`)
+
+### Compilación paso a paso
+
+**Paso 1: Verifica Maven e instalación Java**
+```powershell
+# Verifica Maven
+mvn -version
+
+# Verifica Java
+java -version
+javac -version
+```
+
+**Paso 2: Limpia (opcional pero recomendado)**
+Esto elimina compilaciones previas y la carpeta `target/`:
+```powershell
+mvn clean
+```
+
+**Paso 3: Compila y empaqueta en JAR**
+Desde la carpeta `Proyecto/`:
+```powershell
+mvn package
+```
+
+Salida esperada (al final):
+```
+[INFO] Building jar: ...\target\cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar
+[INFO] BUILD SUCCESS
+```
+
+Si quieres omitir pruebas (en caso de existir):
+```powershell
+mvn package -DskipTests
+```
+
+**Paso 4: Verifica la generación del JAR**
+El archivo estará en:
+```
+target/cubirds_xxxx-x.x.x.jar
+```
+
+Verifica tamaño y existencia:
+```powershell
+ls -l target/*.jar
+```
+
+### Ejecución del JAR compilado
+
+**Opción A: Ejecución directa con java -jar (si pom.xml define Main-Class)**
+```powershell
+java -jar target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar
+```
+
+**Opción B: Ejecución especificando la clase principal (recomendado)**
+```powershell
+java -cp target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar gal.uvigo.esei.aed1.cubirds.iu.Main
+```
+
+**Opción C: Ejecutar directamente con Maven (sin generar JAR)**
+Desde `Proyecto/`:
+```powershell
+mvn exec:java -Dexec.mainClass="gal.uvigo.esei.aed1.cubirds.iu.Main"
+```
+
+### Solución de problemas
+
+| Problema | Solución |
+|----------|----------|
+| `mvn: command not found` | Instala Maven o añádelo a PATH |
+| `java: command not found` | Instala Java 17+ o añádelo a PATH |
+| `BUILD FAILURE: "No compiler is provided"` | Asegúrate de tener JDK (no JRE) instalado |
+| JAR no se ejecuta | Verifica que la clase `Main` existe en `gal.uvigo.esei.aed1.cubirds.iu.Main` |
+| `OutOfMemoryException` en JAR | Incrementa memoria: `java -Xmx512m -cp ...` |
+
+### Ejemplos y fragmentos de uso
+
 Compilar con Maven desde la carpeta `Proyecto`:
 
 ```powershell
 mvn clean package
 ```
 
-Ejecutar el juego (desde IDE o con `mvn exec` si está configurado):
+Ejecutar el juego (opción recomendada):
 
 ```powershell
 mvn exec:java -Dexec.mainClass="gal.uvigo.esei.aed1.cubirds.iu.Main"
+```
+
+O con el JAR:
+
+```powershell
+java -cp target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar gal.uvigo.esei.aed1.cubirds.iu.Main
 ```
 
 Flujo de juego en la consola (ejemplo simplificado):

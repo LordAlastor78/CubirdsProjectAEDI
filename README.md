@@ -56,6 +56,59 @@ Paquetes principales:
 - `gal.uvigo.esei.aed1.cubirds.iu` — interfaz por consola.
 - `es.uvigo.esei.aed1.tads` — TADs auxiliares usados por el proyecto.
 
+## Compilación a JAR 𓅫
+
+### Requisitos previos
+- **Java 17+** instalado (verifica con `java -version`)
+- **Maven 3.6+** instalado (verifica con `mvn -version`)
+
+### Pasos para compilar
+
+1. **Navega a la carpeta del proyecto:**
+   ```powershell
+   cd Proyecto
+   ```
+
+2. **Limpia compilaciones anteriores (opcional pero recomendado):**
+   ```powershell
+   mvn clean
+   ```
+
+3. **Compila y genera el JAR:**
+   ```powershell
+   mvn package
+   ```
+   
+   Si quieres omitir las pruebas (si las hay):
+   ```powershell
+   mvn package -DskipTests
+   ```
+
+4. **Localiza el JAR generado:**
+   El archivo JAR estará en:
+   ```
+   target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar
+   ```
+
+### Ejecución del JAR
+
+**Opción 1: Si el `pom.xml` tiene definida una clase principal:**
+```powershell
+java -jar target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar
+```
+
+**Opción 2: Especificando la clase principal (recomendado):**
+```powershell
+java -cp target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar gal.uvigo.esei.aed1.cubirds.iu.Main
+```
+
+### Ejecución directa con Maven (sin generar JAR)
+
+Si prefieres no generar el JAR y ejecutar directamente:
+```powershell
+mvn exec:java -Dexec.mainClass="gal.uvigo.esei.aed1.cubirds.iu.Main"
+```
+
 ## Clases principales 𓅫
 
 ### `Card`
