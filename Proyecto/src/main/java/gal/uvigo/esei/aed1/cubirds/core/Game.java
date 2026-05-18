@@ -74,15 +74,16 @@ public class Game {
     // Reparte 8 cartas a cada jugador desde el mazo y ordena sus manos por especie.
     private void repartirCartas() {
         iu.displayMessage("Repartiendo cartas...");
+        dealCardsToAllPlayers(8);
+        iu.displayMessage("Reparto completado. Cada jugador tiene 8 cartas.");
+    }
 
-        for (Player jugador : this.players) {
-            // Dar exactamente 8 cartas
-            for (int i = 0; i < 8; i++) {
-                jugador.addCardToHand(deck.takeFirstCard());
+    private void dealCardsToAllPlayers(int cardsPerPlayer) {
+        for (Player player : this.players) {
+            for (int i = 0; i < cardsPerPlayer; i++) {
+                player.addCardToHand(deck.takeFirstCard());
             }
         }
-
-        iu.displayMessage("Reparto completado. Cada jugador tiene 8 cartas.");
     }
 
     // Muestra el estado inicial: mesa y manos de todos los jugadores.
@@ -138,30 +139,29 @@ public class Game {
         // Si no hay especies jugables, saltar turno
         if (tipoElegido == null) {
             iu.displayMessage("No es posible jugar. Turno saltado.");
-            return;
-        }
+        } else {
+            int filaElegida = elegirFila();
+            boolean colocarIzquierda = elegirLado();
 
-        int filaElegida = elegirFila();
-        boolean colocarIzquierda = elegirLado();
+            List<Card> cardsToPlay = player.takeCardsOfSpecies(tipoElegido);
+            List<Card> capturedCards = table.placeCardsOnRow(cardsToPlay, filaElegida, colocarIzquierda);
 
-        List<Card> cardsToPlay = player.takeCardsOfSpecies(tipoElegido);
-        List<Card> capturedCards = table.placeCardsOnRow(cardsToPlay, filaElegida, colocarIzquierda);
+            player.addCardsToHand(capturedCards);
 
-        player.addCardsToHand(capturedCards);
+            if (!capturedCards.isEmpty()) {
+                table.ensureRowHasTwoSpecies(filaElegida, deck, discardedCards);
+            }
 
-        if (!capturedCards.isEmpty()) {
-            table.ensureRowHasTwoSpecies(filaElegida, deck, discardedCards);
-        }
+            // Mostrar la mano del jugador después de la acción
+            iu.displayMessage("\n--- Estado después de jugar cartas ---");
+            iu.displayMessage(player.toString());
 
-        // Mostrar la mano del jugador después de la acción
-        iu.displayMessage("\n--- Estado después de jugar cartas ---");
-        iu.displayMessage(player.toString());
+            // Mostrar la mesa actualizada
+            iu.displayMessage(table.toString());
 
-        // Mostrar la mesa actualizada
-        iu.displayMessage(table.toString());
-
-        if (!player.hasNoCards()) {
-            handleCollectionChoice(player);
+            if (!player.hasNoCards()) {
+                handleCollectionChoice(player);
+            }
         }
 
     }
@@ -235,7 +235,7 @@ public class Game {
 
             if (availableCards >= requiredCards) {
                 player.incrementSpeciesCounter(chosenSpecies);
-                List<Card> discarded = player.takeNCardsOfSpecies(chosenSpecies, requiredCards);
+                List<Card> discarded = player.takeCardsOfSpecies(chosenSpecies);
                 discardedCards.addCards(discarded);
                 iu.displayMessage("Especie añadida a la zona de juego.");
             } else {
@@ -273,12 +273,7 @@ public class Game {
         }
 
         iu.displayMessage("Repartiendo nuevas manos...");
-        for (int i = 0; i < players.length; i++) {
-            for (int j = 0; j < 8; j++) {
-                players[i].addCardToHand(deck.takeFirstCard());
-            }
-        }
-
+        dealCardsToAllPlayers(8);
         iu.displayMessage("Reparto completado. Cada jugador tiene 8 cartas.");
         return false;
     }

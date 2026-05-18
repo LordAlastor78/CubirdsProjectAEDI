@@ -10,18 +10,11 @@ public class DeckOfCards {
     // Constructor de la baraja de cartas
     public DeckOfCards() {
         this.deckOfCards = new LinkedList<>();
-
-        List<Card> allCards = new LinkedList<>();
-
         for (int i = 0; i < Card.values().length; i++) {
-            allCards.addLast(Card.values()[i]);
+            deckOfCards.addLast(Card.values()[i]);
         }
 
-        // Barajamos las cartas
-        while (allCards.size() > 0) {
-            int randomCard = (int) (Math.random() * allCards.size());
-            deckOfCards.addLast(allCards.remove(randomCard));
-        }
+        shuffle();
     }
 
     // Devuelve la primera carta de la baraja y la elimina de esta.

@@ -21,11 +21,11 @@ public class Player {
     }
 
     public int getHandSize() {
-        int total = 0;
+        int totalCards = 0;
         for (int i = 0; i < hand.size(); i++) {
-            total += hand.get(i).size();
+            totalCards += hand.get(i).size();
         }
-        return total;
+        return totalCards;
     }
 
     public int getCollectedSpeciesCount() {
@@ -124,28 +124,6 @@ public class Player {
         if (index != -1) {
             toReturn = hand.get(index);
             hand.remove(index);
-        }
-
-        return toReturn;
-    }
-
-    // Toma "count" cartas de una especie de la mano del jugador.
-    public List<Card> takeNCardsOfSpecies(TypeBird species, int count) {
-        List<Card> toReturn = new LinkedList<>();
-        int index = findGroupIndex(species);
-
-        if (index != -1) {
-            List<Card> group = hand.get(index);
-
-            // Tomar exactamente 'count' cartas del grupo
-            for (int i = 0; i < count && !group.isEmpty(); i++) {
-                toReturn.addLast(group.removeFirst());
-            }
-
-            // Si el grupo quedó vacío, remover el grupo de la mano
-            if (group.isEmpty()) {
-                hand.remove(index);
-            }
         }
 
         return toReturn;

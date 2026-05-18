@@ -19,6 +19,7 @@ Reglas del juego (mapa conceptual → comportamiento en el código)
 - Preparación (clases implicadas):
   - `DeckOfCards`: crea y baraja el mazo.
   - `Table`: coloca 4 filas (vallas) con 3 cartas cada una, asegurando que inicialmente no haya especies repetidas en una misma fila.
+  - `Game` crea la baraja, la mesa y, en su constructor, inicializa la mesa con 3 cartas por fila.
   - `Game.repartirCartas()`: reparte 8 cartas a cada jugador.
 
 - Turno de jugador (flujo principal en `Game.executePlayerTurn`):
@@ -28,7 +29,7 @@ Reglas del juego (mapa conceptual → comportamiento en el código)
   4. Colocar cartas: `Table.placeCardsOnRow(cardsToPlay, rowIndex, placeLeft)`.
   5. Recoger cartas rodeadas: `placeCardsOnRow` devuelve las cartas capturadas que se añaden a la mano del jugador.
   6. Si tras la captura la fila quedó con una única especie, `Table.ensureRowHasTwoSpecies(rowIndex, deck, discardedCards)` rellena desde la baraja (o desde descartes si la baraja se queda vacía) hasta obtener otra especie.
-  7. Opcional: el jugador puede bajar una especie a su zona de juego (`Game.handleCollectionChoice`) si tiene al menos `smallFlock` cartas de esa especie en mano; entonces se incrementa su contador de especie (zona de juego) y las cartas se envían al `DiscardedCards`.
+  7. Opcional: el jugador puede bajar una especie a su zona de juego (`Game.handleCollectionChoice`) si tiene al menos `smallFlock` cartas de esa especie en mano; entonces se incrementa su contador de especie (zona de juego) y se envían al `DiscardedCards` todas las cartas de esa especie que tenga en la mano.
   8. Comprobación de victoria: si `player.getCollectedSpeciesCount() >= 7`, termina la partida.
 
 - Fin de ronda por mano vacía (`Game.handleEmptyHand`):
@@ -52,6 +53,10 @@ Archivos importantes
 - `src/main/java/gal/uvigo/esei/aed1/cubirds/iu/IU.java` — interacción por consola (leer números, strings, mostrar menús).
 - `src/main/java/gal/uvigo/esei/aed1/cubirds/core/*` — clases del juego (listadas y documentadas más abajo).
 
+Nota rápida sobre la versión actual del código:
+- `Card` es un `enum`, no una clase con instancias mutables.
+- `Game` inicializa la mesa en el constructor llamando a `table.inicializarMesa(deck)`.
+
 Clases y API detallada
 ----------------------
 La sección siguiente lista las clases clave del paquete `core` y describe sus métodos públicos (firma, comportamiento y ejemplos de uso).
@@ -63,7 +68,7 @@ La sección siguiente lista las clases clave del paquete `core` y describe sus m
   - `TypeBird.values()` — iterar todas las especies.
 
 2) `Card`
-- Descripción: modelo de una carta. Propiedades: `TypeBird typeBird`, `int smallFlock` (umbral bandada pequeña), `int bigFlock` (si aplica), representación textual.
+- Descripción: enumeración de cartas del mazo. Cada constante representa una carta concreta y contiene `TypeBird typeBird`, `int smallFlock` (bandada pequeña), `int largeFlock` (bandada grande) y representación textual.
 - Métodos públicos relevantes (ejemplo de firma):
   - `TypeBird getTypeBird()` — devuelve la especie de la carta.
   - `int getSmallFlock()` — devuelve el tamaño de bandada pequeña de la carta.
@@ -72,7 +77,7 @@ La sección siguiente lista las clases clave del paquete `core` y describe sus m
 3) `DeckOfCards`
 - Descripción: estructura que representa la baraja. Opera como deque (robar del frente, meter al final, barajar).
 - Métodos públicos:
-  - `void initialize()` / constructor — crea todas las cartas y baraja.
+  - `DeckOfCards()` — crea todas las cartas en orden y las baraja.
   - `Card takeFirstCard()` — saca la carta superior del mazo. Lanza si está vacío (la lógica de juego revisa el montón de descartes antes de llamar si procede).
   - `void addLast(Card c)` — añade una carta al final de la baraja (se usa para devolver cartas no utilizadas al final).
   - `boolean isEmpty()` — indica si la baraja está vacía.
@@ -93,7 +98,6 @@ La sección siguiente lista las clases clave del paquete `core` y describe sus m
 - Métodos públicos y comportamiento:
   - `Table()` — constructor que crea las 4 listas vacías.
   - `void inicializarMesa(DeckOfCards deck)` — coloca 3 cartas por fila: extrae cartas del mazo y, si la carta causa duplicado de especie dentro de la fila, devuelve la carta al final del mazo hasta completar 3 especies distintas.
-    - Nota: ya no limpia explícitamente las filas antes de inicializar (se asume nueva mesa en instancia nueva).
   - `int getRowCount()` — devuelve 4.
   - `List<Card> placeCardsOnRow(List<Card> cardsToPlay, int rowIndex, boolean placeLeft)` — coloca las cartas `cardsToPlay` en la fila `rowIndex`, en el lado izquierdo si `placeLeft==true` o derecho si es `false`.
     - Comportamiento: inserta las cartas (sin necesidad de invertir la lista de entrada). Busca si hay cartas del mismo tipo en la fila; si existe, captura las cartas entre las posiciones correspondientes y las devuelve en una lista `capturedCards`.
@@ -115,7 +119,6 @@ La sección siguiente lista las clases clave del paquete `core` y describe sus m
   - `int getSmallFlockForSpecies(TypeBird species)` — devuelve el umbral de bandada pequeña asociado a la especie (se delega en la primera carta del grupo).
   - `void addCardToHand(Card card)` / `void addCardsToHand(List<Card> cards)` — añaden cartas a la mano agrupadas por especie.
   - `List<Card> takeCardsOfSpecies(TypeBird species)` — quita y devuelve el grupo completo de cartas de la mano para esa especie.
-  - `List<Card> takeNCardsOfSpecies(TypeBird species, int count)` — quita exactamente `count` cartas de la especie y devuelve la lista (si el grupo se queda vacío, se elimina de la mano).
   - `List<Card> takeAllCards()` — vacía por completo la mano devolviendo todas las cartas (usado cuando un jugador se queda sin cartas y los demás deben descartarse).
   - `boolean hasNoCards()` — true si la mano está vacía.
   - `String toString()` — representación de la mano para mostrar por consola.
@@ -129,7 +132,7 @@ La sección siguiente lista las clases clave del paquete `core` y describe sus m
   - `void repartirCartas()` — reparte 8 cartas a cada jugador.
   - `void mostrarEstadoInicial()` — imprime mesa y manos.
   - `TypeBird elegirTipo(Player player)` — obtiene especies jugables y pide elección (IU).
-  - `int elegirFila()` — pide fila al usuario (`IU.chooseRow`) — ahora muestra `Elige una fila (1-N):`.
+  - `int elegirFila()` — pide fila al usuario (`IU.chooseRow`) — ahora muestra `Elige una fila (1-4):`.
   - `boolean elegirLado()` — pide lado (izquierda/derecha).
   - `void executePlayerTurn(Player player)` — ejecuta todo el turno: mostrar mano/mesa, elegir especie, colocar cartas, añadir cartas capturadas a la mano, rellenar fila si procede, ofrecer opción de bajar especie a zona de juego, etc.
   - `void play()` — bucle principal del juego: inicializa jugadores, reparte, ciclo de turnos, detecta victoria o fin de reparto por falta de cartas.
@@ -143,7 +146,7 @@ La sección siguiente lista las clases clave del paquete `core` y describe sus m
   - `String readString(String msg)` — lee una línea.
   - `void displayMessage(String msg)` — imprime por consola.
   - `TypeBird chooseBirdType(List<TypeBird> availableTypes)` — muestra lista numerada y devuelve elección.
-  - `int chooseRow(int rowCount)` — muestra filas disponibles y pide número; devuelve índice 0-based. Mensaje ahora `Elige una fila (1-N):`.
+  - `int chooseRow(int rowCount)` — muestra filas disponibles y pide número; devuelve índice 0-based. Mensaje ahora `Elige una fila (1-4):`.
   - `boolean chooseSide()` — pide 1 izquierda, 2 derecha.
   - `boolean chooseYesNo(String message)` — pide 1 si, 2 no.
 
@@ -185,7 +188,7 @@ Pruebas recomendadas (unitarias/manuales)
 - Tests unitarios sugeridos:
   - `DeckOfCardsTest`: mezclar, tamaño, `takeFirstCard()` comportamiento cuando está vacío (esperar control externo), `shuffle()`.
   - `TableTest`: `inicializarMesa()` (cada fila inicia con 3 cartas distintas), `placeCardsOnRow()` devuelve capturas correctas para varios escenarios, `ensureRowHasTwoSpecies()` rellena correctamente consumiendo descartes si el mazo se vacía.
-  - `PlayerTest`: agrupar cartas por especie, `takeNCardsOfSpecies()` elimina correctamente y actualiza grupos.
+  - `PlayerTest`: agrupar cartas por especie, `takeCardsOfSpecies()` elimina correctamente y actualiza grupos.
   - `GameIntegrationTest`: simulación de varias rondas hasta victoria o fin de reparto.
 
 Entrega y versión

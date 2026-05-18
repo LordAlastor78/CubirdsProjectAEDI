@@ -86,7 +86,7 @@ public class IU {
         int choice = -1;
 
         do {
-            displayMessage("Elige una fila (1-" + rowCount + "):");
+            displayMessage("Elige una fila (1-4):");
             for (int i = 0; i < rowCount; i++) {
                 displayMessage((i + 1) + ". Fila " + (i + 1));
             }
