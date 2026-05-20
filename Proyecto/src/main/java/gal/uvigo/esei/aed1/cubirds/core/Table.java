@@ -28,6 +28,8 @@ public class Table {
                 Card candidate = deck.takeFirstCard();
 
                 if (!tipoRepetidoEnFila(i, candidate)) {
+                    // Si el tipo de pájaro de candidate no está repetido en la fila i, se añade a
+                    // la fila i.
                     this.filas[i].addLast(candidate);
                 } else {
                     deck.addLast(candidate); // Movemos candidate al otro lado de la baraja
@@ -40,7 +42,9 @@ public class Table {
     // Devuelve un booleano que indica si el tipo de pájaro de la carta "candidate"
     // ya está presente en la fila "numFila".
     private boolean tipoRepetidoEnFila(int numFila, Card candidate) {
+
         boolean repetido = false;
+
         for (Card c : this.filas[numFila]) {
             if (c.getTypeBird() == candidate.getTypeBird()) {
                 repetido = true;
@@ -59,18 +63,22 @@ public class Table {
     // primera o última carta de la misma especie que haya en la fila.
     // (primera o última según placeLeft).
     public List<Card> placeCardsOnRow(List<Card> cardsToPlay, int rowIndex, boolean placeLeft) {
+
+        // Lista de cartas capturadas, que se devuelve al final del método.
         List<Card> capturedCards = new LinkedList<>();
 
         if (cardsToPlay == null || cardsToPlay.isEmpty()) {
             return capturedCards;
         }
 
-        List<Card> row = filas[rowIndex];
-        TypeBird species = cardsToPlay.get(0).getTypeBird();
+        List<Card> row = filas[rowIndex]; // Fila en las que colocamos
+        TypeBird species = cardsToPlay.get(0).getTypeBird(); // especie que elegimos
 
-        int oldSize = row.size();
-        int matchIndex = -1;
+        int oldSize = row.size(); // tamaño de la fila antes de colocar las cartas, para saber hasta dónde buscar
+                                 // la carta de la misma especie
+        int matchIndex = -1; // -1 si no se encuentra la carta de la misma especie
 
+        // 
         if (placeLeft) {
             for (int i = 0; i < oldSize && matchIndex == -1; i++) {
                 if (row.get(i).getTypeBird() == species) {
@@ -85,6 +93,7 @@ public class Table {
             }
         }
 
+        //recorremos las cartas a colocar
         if (placeLeft) {
             for (int i = 0; i < cardsToPlay.size(); i++) {
                 row.addFirst(cardsToPlay.get(i));
