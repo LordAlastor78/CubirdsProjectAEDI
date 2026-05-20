@@ -60,7 +60,7 @@ public class LinkedStack<T> implements Stack<T> {
 
     @Override
     public boolean contains(char character) {
-        // TODO Auto-generated method stub
+        // Method not implemented for this stack implementation
         throw new UnsupportedOperationException("Unimplemented method 'contains'");
     }
 }

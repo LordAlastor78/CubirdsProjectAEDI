@@ -1,4 +1,5 @@
-{   /*
+{
+    /*
     ░░░░░░░░▄▄▄▀▀▀▀▀▄▄███▄░░░░░░░░░░░░░░░░
     ░░░░░▄▀▀░░░░░░░░▐░▀██▌░░░░░░░░░░░░░░░░
     ░░░▄▀░░░░▄▄████░▌▀▀░▀█░░░░░░░░░░░░░░░░
@@ -11,13 +12,48 @@
     ░░░░░░has░░░░░░░░░░▀▄▄███████████████░ 
     ░░░░░arrivedd░░░░░░░░░░░░░█▀██████░░░░
     */
+    // ==========================================
+    // ☕ CONFIGURACIÓN JAVA
+    // ==========================================
+    // Automatiza la compilación y actualizaciones del proyecto
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.import.maven.enabled": true,
-    "java.import.gradle.enabled": false,
-    "gradle.enabled": false,
-    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable"
-    //ponemos Cascadia Code 
-    ,
-    "editor.fontFamily": "Cascadia Code, Consolas, 'Courier New', monospace",
-    "bold": false
+    // He activado Gradle (es mejor tenerlo por si abres proyectos modernos de Spring/Android)
+    "java.import.gradle.enabled": true,
+    "gradle.enabled": true,
+    // Autocompletado inteligente mientras escribes (sin tener que pulsar Ctrl+Espacio)
+    "java.completion.guessArguments": true,
+    "java.completion.favoriteStaticMembers": [
+        "org.junit.Assert.*",
+        "org.hamcrest.CoreMatchers.*",
+        "org.mockito.Mockito.*"
+    ],
+    // Limpieza y formateo automático del código al guardar (organiza imports, añade @Override, etc.)
+    "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+    "java.format.settings.profile": "GoogleStyle",
+    "editor.formatOnSave": true,
+    "codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    // Muestra sutilmente en pantalla los nombres de los parámetros en los métodos (Inlay Hints)
+    "editor.inlayHints.enabled": "on",
+    "java.inlayHints.parameterNames.enabled": "all",
+    // Optimización de memoria para que el entorno de Java vaya fluido (Tus 4GB asignados)
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable",
+    // ==========================================
+    // 🎨 FUENTE (CASCADIA CODE) Y CURSOR BONITO
+    // ==========================================
+    // Fuente principal con alternativas por si acaso
+    "editor.fontFamily": "'Cascadia Code', Consolas, 'Courier New', monospace",
+    "editor.fontSize": 14,
+    // Activa las "ligaduras" (convierte símbolos como '->' o '!=' en flechas y caracteres hermosos de programación)
+    "editor.fontLigatures": true,
+    // Configuración del cursor premium (Efecto "Smooth" de parpadeo y animación al moverse)
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.cursorStyle": "line", // Línea estilizada estándar
+    "editor.cursorWidth": 3, // Un grosor elegante, ni muy fino ni muy gordo
+    // Extras visuales para no perderte entre llaves { }
+    "editor.guides.bracketPairs": true,
+    "editor.bracketPairColorization.enabled": true
 }

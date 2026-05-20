@@ -8,7 +8,7 @@ import gal.uvigo.esei.aed1.cubirds.iu.IU;
  * CLASE Game — CONTROLADOR PRINCIPAL del juego CuBirds
  * 
  * ¿QUÉ ES?
- * - Gestiona TODO el flujo de la partida
+ * - Gestiona el flujo completo de la partida
  * - Controla jugadores, mesa, baraja, descartes
  * - Ejecuta cada turno de cada jugador
  * - Determina cuándo termina el juego y quién gana

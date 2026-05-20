@@ -1,0 +1,89 @@
+graph TD
+    Start([🎮 START: main]) --> CreateUI["Crear IU"]
+    CreateUI --> CreateGame["Crear Game"]
+    CreateGame --> Play["▶️ game.play"]
+    
+    Play --> InicJugadores["inicializarJugadores"]
+    InicJugadores --> ReadPlayers["Leer: ¿Cuántos jugadores? 2-5"]
+    ReadPlayers --> ReadNames["Leer nombre de cada jugador"]
+    ReadNames --> CreatePlayers["Crear array de Players"]
+    
+    CreatePlayers --> InicMesa["Inicializar Mesa<br/>table.inicializarMesa"]
+    InicMesa --> Repartir["repartirCartas"]
+    Repartir --> Deal["Dar 8 cartas a cada jugador"]
+    
+    Deal --> BuclePrincipal["🔄 BUCLE PRINCIPAL"]
+    
+    BuclePrincipal --> CheckCartas{"¿Jugador<br/>sin cartas?"}
+    CheckCartas -->|No| ExecuteTurn["executePlayerTurn"]
+    CheckCartas -->|Sí| HandleEmpty["handleEmptyHand"]
+    
+    ExecuteTurn --> MostrarMano["Mostrar mano del jugador"]
+    MostrarMano --> MostrarMesa["Mostrar mesa"]
+    MostrarMesa --> GetPlayable["getPlayableSpecies"]
+    GetPlayable --> CheckPlayable{"¿Hay especies<br/>jugables?"}
+    CheckPlayable -->|No| SkipTurn["Saltar turno"]
+    CheckPlayable -->|Sí| ChooseSpecies["chooseBirdType<br/>Elegir especie"]
+    
+    ChooseSpecies --> ChooseRow["chooseRow<br/>Elegir fila 1-4"]
+    ChooseRow --> ChooseSide["chooseSide<br/>Elegir izquierda/derecha"]
+    ChooseSide --> TakeCards["takeCardsOfSpecies<br/>Obtener cartas de mano"]
+    
+    TakeCards --> PlaceCards["placeCardsOnRow<br/>Colocar cartas en fila"]
+    PlaceCards --> Capture["Capturar cartas<br/>si hay match"]
+    Capture --> CheckCapture{"¿Se capturaron<br/>cartas?"}
+    CheckCapture -->|Sí| AddToHand["addCardsToHand<br/>Añadir capturadas a mano"]
+    CheckCapture -->|No| EnsureRow["Fin captura"]
+    
+    AddToHand --> EnsureRow["ensureRowHasTwoSpecies<br/>Rellenar fila si es necesario"]
+    EnsureRow --> HandleCollection["handleCollectionChoice<br/>¿Bajar especies?"]
+    
+    HandleCollection --> CheckCollection{"¿Tiene suficientes<br/>cartas para bajar?"}
+    CheckCollection -->|Sí| AskLower["chooseYesNo<br/>¿Deseas bajar?"]
+    CheckCollection -->|No| DrawCard
+    AskLower -->|Sí| LowerSpecies["takeCardsOfSpecies<br/>incrementSpeciesCounter"]
+    AskLower -->|No| DrawCard["Robar carta del mazo"]
+    LowerSpecies --> DrawCard
+    
+    DrawCard --> CheckDeck{"¿Hay cartas<br/>en baraja?"}
+    CheckDeck -->|Sí| TakeFromDeck["Robar 1 carta"]
+    CheckDeck -->|No| CheckDiscard{"¿Hay descartes?"}
+    CheckDiscard -->|Sí| RecycleDeck["moveAllToDeck<br/>Reciclar descartes"]
+    CheckDiscard -->|No| NoCards["No hay más cartas"]
+    
+    SkipTurn --> CheckWin1
+    TakeFromDeck --> CheckWin1{"¿Ganó?<br/>7 especies"}
+    RecycleDeck --> CheckWin1
+    NoCards --> CheckWin1
+    
+    CheckWin1 -->|Sí| Winner["Anunciar ganador!"]
+    CheckWin1 -->|No| CheckEmpty{"¿Sin cartas<br/>en mano?"}
+    
+    CheckEmpty -->|Sí| HandleEmpty
+    CheckEmpty -->|No| NextPlayer["Siguiente jugador"]
+    
+    HandleEmpty --> CheckCanDeal{"¿Hay cartas<br/>para repartir?"}
+    CheckCanDeal -->|Sí| DealNewCards["Repartir 8 cartas nuevas"]
+    CheckCanDeal -->|No| WinnerByCollection["getWinnerByCollection<br/>Ganador por colección"]
+    
+    DealNewCards --> EndHandleEmpty["Fin handleEmptyHand"]
+    WinnerByCollection --> EndGame["JUEGO TERMINA"]
+    
+    EndHandleEmpty --> CheckGameEnd{"¿Terminar<br/>juego?"}
+    CheckGameEnd -->|No| NextPlayer
+    CheckGameEnd -->|Sí| EndGame
+    
+    NextPlayer --> PressToContinue["readString<br/>Presiona tecla"]
+    PressToContinue --> BuclePrincipal
+    
+    Winner --> EndGame
+    EndGame --> ShowResults["Mostrar resultados finales"]
+    ShowResults --> Finish(["🎉 FIN DEL JUEGO"])
+    
+    style Start fill:#2ecc71,color:#fff
+    style Finish fill:#e74c3c,color:#fff
+    style BuclePrincipal fill:#f39c12,color:#000
+    style Winner fill:#9b59b6,color:#fff
+    style EndGame fill:#e74c3c,color:#fff
+    style ExecuteTurn fill:#3498db,color:#fff
+    style HandleEmpty fill:#e67e22,color:#fff
