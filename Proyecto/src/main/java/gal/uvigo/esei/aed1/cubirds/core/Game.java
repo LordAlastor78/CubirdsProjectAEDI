@@ -6,10 +6,10 @@ import gal.uvigo.esei.aed1.cubirds.iu.IU;
 
 /**
  * CLASE Game — CONTROLADOR PRINCIPAL del juego CuBirds
- * 
+ *
  * ¿QUÉ ES? - Gestiona el flujo completo de la partida - Controla jugadores, mesa, baraja, descartes
  * - Ejecuta cada turno de cada jugador - Determina cuándo termina el juego y quién gana
- * 
+ *
  * FLUJO GENERAL DE LA PARTIDA: 1. play() se ejecuta (método principal) 2. inicializarJugadores() →
  * pide nombres de jugadores 3. repartirCartas() → cada jugador recibe 5 cartas (mesa ya
  * inicializada en constructor) 4. BUCLE PRINCIPAL: - Para cada jugador: - executePlayerTurn() → el
@@ -40,7 +40,22 @@ public class Game {
      */
     private void inicializarJugadores() {
         int numJugadores;
-        iu.displayMessage("¡Bienvenido a CuBirds!");
+        iu.displayMessage("  ¡Bienvenido a CuBirds!   ");
+        iu.displayMessage("""
+
+            ░░░░░░░░▄▄▄▀▀▀▀▀▀▀▄▄███▄░░░░░░░░░░░░░░░░
+            ░░░░░▄▀▀░░░░░░░░░░▐░▀██▌░░░░░░░░░░░░░░░░
+            ░░░▄▀░░░░▄▄██████░▌▀▀░▀█░░░░░░░░░░░░░░░░
+            ░░▄█░░▄▀▀▒▒▒▒▒▒▒▒▄▐░░░░█▌░░░░░░░░░░░░░░░
+            ░▐█▀▄▀▄▄▄▄▀▀▀▀▀▀▀▀▌░░░░░▐█▄░░░░░░░░░░░░░
+            ░▌▄▄▀▀░░░░░░░░░░░░▌░░░░▄███████▄░░░░░░░░
+            ░░░░░░░░░░░░░░░░░▐░░░░▐███████████▄░░░░░
+            ░░░░░le░░░░░░░░░░░▐░░░░▐█████████████▄░░
+            ░░░░toucan░░░░░░░░░░▀▄░░░▐█████████████▄
+            ░░░░░░has░░░░░░░░░░░░▀▄▄███████████████░
+            ░░░░░arrivedd░░░░░░░░░░░░░░░█▀██████░░░░
+
+        """); //toucan decorativo importante como símbolo del proyecto 𓅨
 
         do {
             numJugadores = iu.readNumber("¿Cuántos van a jugar? (2 a 5): ");
