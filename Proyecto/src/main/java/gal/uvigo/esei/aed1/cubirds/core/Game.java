@@ -7,13 +7,19 @@ import gal.uvigo.esei.aed1.cubirds.iu.IU;
 /**
  * CLASE Game — CONTROLADOR PRINCIPAL del juego CuBirds
  *
- * ¿QUÉ ES? - Gestiona el flujo completo de la partida - Controla jugadores, mesa, baraja, descartes
- * - Ejecuta cada turno de cada jugador - Determina cuándo termina el juego y quién gana
+ * ¿QUÉ ES? - Gestiona el flujo completo de la partida - Controla jugadores,
+ * mesa, baraja, descartes
+ * - Ejecuta cada turno de cada jugador - Determina cuándo termina el juego y
+ * quién gana
  *
- * FLUJO GENERAL DE LA PARTIDA: 1. play() se ejecuta (método principal) 2. inicializarJugadores() →
- * pide nombres de jugadores 3. repartirCartas() → cada jugador recibe 5 cartas (mesa ya
- * inicializada en constructor) 4. BUCLE PRINCIPAL: - Para cada jugador: - executePlayerTurn() → el
- * jugador juega - ¿Ganó? (7 especies) → FIN - ¿Sin cartas en mano? → handleEmptyHand() - ¿Hay
+ * FLUJO GENERAL DE LA PARTIDA: 1. play() se ejecuta (método principal) 2.
+ * inicializarJugadores() →
+ * pide nombres de jugadores 3. repartirCartas() → cada jugador recibe 5 cartas
+ * (mesa ya
+ * inicializada en constructor) 4. BUCLE PRINCIPAL: - Para cada jugador: -
+ * executePlayerTurn() → el
+ * jugador juega - ¿Ganó? (7 especies) → FIN - ¿Sin cartas en mano? →
+ * handleEmptyHand() - ¿Hay
  * baraja? → Si no, el juego termina
  */
 public class Game {
@@ -43,19 +49,19 @@ public class Game {
         iu.displayMessage("  ¡Bienvenido a CuBirds!   ");
         iu.displayMessage("""
 
-            ░░░░░░░░▄▄▄▀▀▀▀▀▀▀▄▄███▄░░░░░░░░░░░░░░░░
-            ░░░░░▄▀▀░░░░░░░░░░▐░▀██▌░░░░░░░░░░░░░░░░
-            ░░░▄▀░░░░▄▄██████░▌▀▀░▀█░░░░░░░░░░░░░░░░
-            ░░▄█░░▄▀▀▒▒▒▒▒▒▒▒▄▐░░░░█▌░░░░░░░░░░░░░░░
-            ░▐█▀▄▀▄▄▄▄▀▀▀▀▀▀▀▀▌░░░░░▐█▄░░░░░░░░░░░░░
-            ░▌▄▄▀▀░░░░░░░░░░░░▌░░░░▄███████▄░░░░░░░░
-            ░░░░░░░░░░░░░░░░░▐░░░░▐███████████▄░░░░░
-            ░░░░░le░░░░░░░░░░░▐░░░░▐█████████████▄░░
-            ░░░░toucan░░░░░░░░░░▀▄░░░▐█████████████▄
-            ░░░░░░has░░░░░░░░░░░░▀▄▄███████████████░
-            ░░░░░arrivedd░░░░░░░░░░░░░░░█▀██████░░░░
+                    ░░░░░░░░▄▄▄▀▀▀▀▀▀▀▄▄███▄░░░░░░░░░░░░░░░░
+                    ░░░░░▄▀▀░░░░░░░░░░▐░▀██▌░░░░░░░░░░░░░░░░
+                    ░░░▄▀░░░░▄▄██████░▌▀▀░▀█░░░░░░░░░░░░░░░░
+                    ░░▄█░░▄▀▀▒▒▒▒▒▒▒▒▄▐░░░░█▌░░░░░░░░░░░░░░░
+                    ░▐█▀▄▀▄▄▄▄▀▀▀▀▀▀▀▀▌░░░░░▐█▄░░░░░░░░░░░░░
+                    ░▌▄▄▀▀░░░░░░░░░░░░▌░░░░▄███████▄░░░░░░░░
+                    ░░░░░░░░░░░░░░░░░▐░░░░▐███████████▄░░░░░
+                    ░░░░░le░░░░░░░░░░░▐░░░░▐█████████████▄░░
+                    ░░░░toucan░░░░░░░░░░▀▄░░░▐█████████████▄
+                    ░░░░░░has░░░░░░░░░░░░▀▄▄███████████████░
+                    ░░░░░arrivedd░░░░░░░░░░░░░░░█▀██████░░░░
 
-        """); //toucan decorativo importante como símbolo del proyecto 𓅨
+                """); // toucan decorativo importante como símbolo del proyecto 𓅨
 
         do {
             numJugadores = iu.readNumber("¿Cuántos van a jugar? (2 a 5): ");
@@ -72,7 +78,8 @@ public class Game {
     }
 
     /**
-     * ¡¡ PUNTO DE ENTRADA PRINCIPAL DEL JUEGO !! Ejecuta el flujo completo: inicializa, reparte,
+     * ¡¡ PUNTO DE ENTRADA PRINCIPAL DEL JUEGO !! Ejecuta el flujo completo:
+     * inicializa, reparte,
      * bucle de turnos, determina ganador
      */
     public void play() {
@@ -115,7 +122,8 @@ public class Game {
     }
 
     /**
-     * Ejecuta UN TURNO COMPLETO de un jugador Proceso: elegir especie → elegir fila → elegir lado →
+     * Ejecuta UN TURNO COMPLETO de un jugador Proceso: elegir especie → elegir fila
+     * → elegir lado →
      * colocar cartas → capturar → bajar especies → robar carta
      */
     public void executePlayerTurn(Player player) {
@@ -134,8 +142,7 @@ public class Game {
         boolean colocarIzquierda = iu.chooseSide();
 
         List<Card> cardsToPlay = player.takeCardsOfSpecies(tipoElegido);
-        List<Card> capturedCards =
-                table.placeCardsOnRow(cardsToPlay, filaElegida, colocarIzquierda);
+        List<Card> capturedCards = table.placeCardsOnRow(cardsToPlay, filaElegida, colocarIzquierda);
 
         player.addCardsToHand(capturedCards);
 
