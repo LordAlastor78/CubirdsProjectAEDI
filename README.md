@@ -1,15 +1,15 @@
 # CuBirds — Proyecto AED I (Tercera Entrega) 𓅫
 
-░░░░░░░░▄▄▄▀▀▀▄▄███▄░░░░░░░░░░░░░░ 
-░░░░░▄▀▀░░░░░░░▐░▀██▌░░░░░░░░░░░░░ 
-░░░▄▀░░░░▄▄███░▌▀▀░▀█░░░░░░░░░░░░░ 
-░░▄█░░▄▀▀▒▒▒▒▒▄▐░░░░█▌░░░░░░░░░░░░ 
-░▐█▀▄▀▄▄▄▄▀▀▀▀▌░░░░░▐█▄░░░░░░░░░░░ 
-░▌▄▄▀▀░░░░░░░░▌░░░░▄███████▄░░░░░░ 
-░░░░░░░░░░░░░▐░░░░▐███████████▄░░░ 
-░░░░░le░░░░░░░▐░░░░▐█████████████▄ 
-░░░░toucan░░░░░░▀▄░░░▐█████████████▄  
-░░░░░░has░░░░░░░░▀▄▄███████████████  
+░░░░░░░░▄▄▄▀▀▀▄▄███▄░░░░░░░░░░░░░░
+░░░░░▄▀▀░░░░░░░▐░▀██▌░░░░░░░░░░░░░
+░░░▄▀░░░░▄▄███░▌▀▀░▀█░░░░░░░░░░░░░
+░░▄█░░▄▀▀▒▒▒▒▒▄▐░░░░█▌░░░░░░░░░░░░
+░▐█▀▄▀▄▄▄▄▀▀▀▀▌░░░░░▐█▄░░░░░░░░░░░
+░▌▄▄▀▀░░░░░░░░▌░░░░▄███████▄░░░░░░
+░░░░░░░░░░░░░▐░░░░▐███████████▄░░░
+░░░░░le░░░░░░░▐░░░░▐█████████████▄
+░░░░toucan░░░░░░▀▄░░░▐█████████████▄
+░░░░░░has░░░░░░░░▀▄▄███████████████
 ░░░░░arrived░░░░░░░░░░░░█▀██████░░
 
 Proyecto en Java del juego de cartas **CuBirds**, desarrollado para la asignatura de Algoritmos y Estructuras de Datos I.
@@ -78,7 +78,7 @@ Paquetes principales:
    ```powershell
    mvn package
    ```
-   
+
    Si quieres omitir las pruebas (si las hay):
    ```powershell
    mvn package -DskipTests
@@ -87,19 +87,19 @@ Paquetes principales:
 4. **Localiza el JAR generado:**
    El archivo JAR estará en:
    ```
-   target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar
+   target/cubirds_stable-1.3.1.jar
    ```
 
 ### Ejecución del JAR
 
-**Opción 1: Si el `pom.xml` tiene definida una clase principal:**
+**Opción 1: Ejecutando directamente el JAR:**
 ```powershell
-java -jar target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar
+java -jar target/cubirds_stable-1.3.1.jar
 ```
 
 **Opción 2: Especificando la clase principal (recomendado):**
 ```powershell
-java -cp target/cubirds_PrimeraEntrega-1.0-SNAPSHOT.jar gal.uvigo.esei.aed1.cubirds.iu.Main
+java -cp target/cubirds_stable-1.3.1.jar gal.uvigo.esei.aed1.cubirds.iu.Main
 ```
 
 ### Ejecución directa con Maven (sin generar JAR)
@@ -281,4 +281,3 @@ https://www.malditogames.com/juegos/cubirds-juego/
 
 
 ---------------
-
