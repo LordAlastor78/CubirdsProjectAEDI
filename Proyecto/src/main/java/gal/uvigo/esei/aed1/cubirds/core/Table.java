@@ -23,6 +23,8 @@ public class Table {
 
     /** Array de 4 filas. Cada fila es una lista de cartas. */
     private List<Card>[] filas;
+    private int[] blockedTurnsRemaining;
+    private boolean[] newlyBlockedRows;
 
     // ========================================================================
     // CONSTRUCTOR
@@ -33,8 +35,50 @@ public class Table {
      */
     public Table() {
         this.filas = new LinkedList[4];
+        this.blockedTurnsRemaining = new int[4];
+        this.newlyBlockedRows = new boolean[4];
         for (int i = 0; i < 4; i++) {
             this.filas[i] = new LinkedList<>();
+        }
+    }
+
+    public void blockRow(int rowIndex) {
+        blockRow(rowIndex, 1);
+    }
+
+    public void blockRow(int rowIndex, int turns) {
+        validateRowIndex(rowIndex);
+        if (turns <= 0) {
+            turns = 1;
+        }
+
+        this.blockedTurnsRemaining[rowIndex] =
+                Math.max(this.blockedTurnsRemaining[rowIndex], turns);
+        this.newlyBlockedRows[rowIndex] = true;
+    }
+
+    public void unblockRow(int rowIndex) {
+        validateRowIndex(rowIndex);
+        this.blockedTurnsRemaining[rowIndex] = 0;
+        this.newlyBlockedRows[rowIndex] = false;
+    }
+
+    public boolean isRowBlocked(int rowIndex) {
+        validateRowIndex(rowIndex);
+        return this.blockedTurnsRemaining[rowIndex] > 0;
+    }
+
+    public void advanceBlockedRows() {
+        for (int i = 0; i < this.blockedTurnsRemaining.length; i++) {
+            if (this.blockedTurnsRemaining[i] > 0 && !this.newlyBlockedRows[i]) {
+                this.blockedTurnsRemaining[i]--;
+            }
+
+            if (this.blockedTurnsRemaining[i] <= 0) {
+                this.blockedTurnsRemaining[i] = 0;
+            }
+
+            this.newlyBlockedRows[i] = false;
         }
     }
 
@@ -139,6 +183,12 @@ public class Table {
             return capturedCards;
         }
 
+        validateRowIndex(rowIndex);
+
+        if (isRowBlocked(rowIndex)) {
+            return capturedCards;
+        }
+
         List<Card> row = filas[rowIndex];
         TypeBird species = cardsToPlay.get(0).getTypeBird(); // Qué tipo estoy jugando
         int oldSize = row.size(); // Tamaño ANTES de colocar, para saber dónde buscar
@@ -192,6 +242,19 @@ public class Table {
         }
 
         return capturedCards;
+    }
+
+    public int countSpeciesOnTable(TypeBird type) {
+        int totalCount = 0;
+        for (int i = 0; i < this.filas.length; i++) {
+            List<Card> row = this.filas[i];
+            for (int j = 0; j < row.size(); j++) {
+                if (row.get(j).getTypeBird() == type) {
+                    totalCount++;
+                }
+            }
+        }
+        return totalCount;
     }
 
     // ========================================================================
@@ -306,7 +369,7 @@ public class Table {
      * índices y lanza {@link IllegalArgumentException} si son inválidos.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * Table table = new Table();
      * DeckOfCards deck = new DeckOfCards();
@@ -328,7 +391,7 @@ public class Table {
      * lanza {@link IllegalArgumentException} si son inválidos.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * Table table = new Table();
      * DeckOfCards deck = new DeckOfCards();
@@ -358,7 +421,7 @@ public class Table {
      * interna.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * Table table = new Table();
      * DeckOfCards deck = new DeckOfCards();
@@ -384,7 +447,7 @@ public class Table {
      * negocio (p.ej. duplicados de tipo), solo valida argumentos y copia los elementos.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * Table table = new Table();
      * List<Card> nuevaFila = new LinkedList<>();
@@ -425,7 +488,7 @@ public class Table {
      * No modifica la fila original.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * List<Card> impares = table.getOddPositionCards(0);
      * </pre>
@@ -450,7 +513,7 @@ public class Table {
      * No modifica la fila original.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * List<Card> pares = table.getEvenPositionCards(0);
      * </pre>
@@ -475,7 +538,7 @@ public class Table {
      * última). Si la fila tiene <= 2 cartas devuelve vacía.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * List<Card> centro = table.getMiddleCards(0);
      * </pre>
@@ -502,7 +565,7 @@ public class Table {
      * devuelve solo esa. Si no hay cartas devuelve vacía.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * List<Card> extremos = table.getEdgeCards(0);
      * </pre>
@@ -535,7 +598,7 @@ public class Table {
      * Devuelve cuántas cartas hay en la fila indicada.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * int tam = table.getRowSize(0);
      * </pre>
@@ -553,7 +616,7 @@ public class Table {
      * el índice de fila es inválido.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * Card primera = table.getFirstCard(0);
      * </pre>
@@ -575,7 +638,7 @@ public class Table {
      * el índice de fila es inválido.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * Card ultima = table.getLastCard(0);
      * </pre>
@@ -598,7 +661,7 @@ public class Table {
      * Valida parámetros.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * table.addCardToRow(0, deck.takeFirstCard(), true); // añade al principio
      * </pre>
@@ -623,7 +686,7 @@ public class Table {
      * Elimina y devuelve la carta en la posición indicada. Valida índices.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * Card borrada = table.removeCard(0, 1);
      * </pre>
@@ -646,7 +709,7 @@ public class Table {
      * parámetro carta.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * int idx = table.findCardIndex(0, someCard);
      * </pre>
@@ -674,7 +737,7 @@ public class Table {
      * Valida parámetros.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * int first = table.findFirstCardOfType(0, TypeBird.TUCAN);
      * </pre>
@@ -702,7 +765,7 @@ public class Table {
      * parámetros.
      *
      * Ejemplo de uso:
-     * 
+     *
      * <pre>
      * int last = table.findLastCardOfType(0, TypeBird.PATO);
      * </pre>

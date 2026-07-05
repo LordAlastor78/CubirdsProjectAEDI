@@ -5,19 +5,18 @@ import es.uvigo.esei.aed1.tads.list.List;
 
 /**
  * CLASE Player — Representa UN jugador en la partida
- * 
- * ESTRUCTURA DE LA MANO (MUY IMPORTANTE):
- * - hand es una List<List<Card>> (lista de listas)
- * - Cada grupo contiene cartas del MISMO tipo (especie)
- * - EJEMPLO: hand = [[FLAMENCO_1, FLAMENCO_2], [TUCAN_3, TUCAN_5], [PATO_7]]
- * 
- * ESTRUCTURA DE LA COLECCIÓN:
- * - speciesCounters es un array int[] con 8 posiciones (uno por cada especie)
- * - Usa TypeBird.ordinal() como índice (FLAMENCO=0, TUCAN=1, etc.)
+ *
+ * ESTRUCTURA DE LA MANO (MUY IMPORTANTE): - hand es una List<List<Card>> (lista de listas) - Cada
+ * grupo contiene cartas del MISMO tipo (especie) - EJEMPLO: hand = [[FLAMENCO_1, FLAMENCO_2],
+ * [TUCAN_3, TUCAN_5], [PATO_7]]
+ *
+ * ESTRUCTURA DE LA COLECCIÓN: - speciesCounters es un array int[] con 8 posiciones (uno por cada
+ * especie) - Usa TypeBird.ordinal() como índice (FLAMENCO=0, TUCAN=1, etc.)
  */
 public class Player {
     private String name;
-    private List<List<Card>> hand; // Lista de grupos, cada grupo contiene cartas de la misma especie.
+    private List<List<Card>> hand; // Lista de grupos, cada grupo contiene cartas de la misma
+                                   // especie.
     private int[] speciesCounters; // Contador de especies en la zona de juego.
 
     // Constructor
@@ -63,9 +62,9 @@ public class Player {
 
         int index = species.ordinal();
         /*
-         * species.ordinal() devuelve el índice de la especie en el enum TypeBird, que
-         * coincide con su posición en el array speciesCounters.
-         * por ejemplo FLAMENCO.ordinal() devuelve 0, TUCAN.ordinal() devuelve 1, etc.
+         * species.ordinal() devuelve el índice de la especie en el enum TypeBird, que coincide con
+         * su posición en el array speciesCounters. por ejemplo FLAMENCO.ordinal() devuelve 0,
+         * TUCAN.ordinal() devuelve 1, etc.
          */
         speciesCounters[index] = speciesCounters[index] + 1;
 
@@ -128,6 +127,39 @@ public class Player {
         }
     }
 
+    public void exchangeCard(Player other, int cardIndexOwn, int cardIndexOther) {
+        if (other == null || other == this) {
+            throw new IllegalArgumentException("El jugador destino no es válido.");
+        }
+
+        if (cardIndexOwn < 0 || cardIndexOwn >= this.getHandSize() || cardIndexOther < 0
+                || cardIndexOther >= other.getHandSize()) {
+            throw new IllegalArgumentException("Índices de carta fuera de rango.");
+        }
+
+        int[] posOwn = findGlobalIndexPosition(this.hand, cardIndexOwn);
+        int[] posOther = findGlobalIndexPosition(other.hand, cardIndexOther);
+
+        if (posOwn[0] == -1 || posOther[0] == -1) {
+            throw new IllegalArgumentException(
+                    "No se han podido localizar las cartas a intercambiar.");
+        }
+
+        Card ownCard = this.hand.get(posOwn[0]).remove(posOwn[1]);
+        Card otherCard = other.hand.get(posOther[0]).remove(posOther[1]);
+
+        if (this.hand.get(posOwn[0]).isEmpty()) {
+            this.hand.remove(posOwn[0]);
+        }
+
+        if (other.hand.get(posOther[0]).isEmpty()) {
+            other.hand.remove(posOther[0]);
+        }
+
+        this.addCardToHand(otherCard);
+        other.addCardToHand(ownCard);
+    }
+
     // Toma todas las cartas de una especie específica y las elimina de la mano.
     public List<Card> takeCardsOfSpecies(TypeBird species) {
         List<Card> toReturn = new LinkedList<>();
@@ -173,6 +205,36 @@ public class Player {
             }
         }
         return index;
+    }
+
+    private int[] findGlobalIndexPosition(List<List<Card>> playerHand, int globalIndex) {
+        int currentAccumulator = 0;
+        for (int i = 0; i < playerHand.size(); i++) {
+            List<Card> speciesGroup = playerHand.get(i);
+            if (globalIndex < currentAccumulator + speciesGroup.size()) {
+                int internalIndex = globalIndex - currentAccumulator;
+                return new int[] {i, internalIndex};
+            }
+            currentAccumulator += speciesGroup.size();
+        }
+        return new int[] {-1, -1};
+    }
+
+    public TypeBird getMostFrequentSpecies() {
+        if (this.hand.isEmpty()) {
+            return null;
+        }
+
+        TypeBird mostFrequent = null;
+        int maxCards = -1;
+        for (int i = 0; i < hand.size(); i++) {
+            List<Card> group = hand.get(i);
+            if (group.size() > maxCards) {
+                maxCards = group.size();
+                mostFrequent = group.get(0).getTypeBird();
+            }
+        }
+        return mostFrequent;
     }
 
     // Método toString

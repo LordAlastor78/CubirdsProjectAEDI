@@ -24,6 +24,7 @@ public class Game {
     private Table table;
     private Player[] players;
     private DiscardedCards discardedCards;
+    private boolean inverseOrder;
 
     public Game(IU iu) {
         this.iu = iu;
@@ -31,6 +32,7 @@ public class Game {
         this.table = new Table();
         this.table.inicializarMesa(this.deck);
         this.discardedCards = new DiscardedCards();
+        this.inverseOrder = false;
         this.players = null; // Se inicializa como null porque ya se convierte en un array en
                              // inicializarJugadores()
     }
@@ -98,7 +100,11 @@ public class Game {
                     gameFinished = true;
             }
             if (!gameFinished) {
-                currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+                if (!inverseOrder) {
+                    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+                } else {
+                    currentPlayerIndex = (currentPlayerIndex - 1 + players.length) % players.length;
+                }
                 iu.readString("\nPresiona una tecla para continuar...");
             }
         }
@@ -131,7 +137,14 @@ public class Game {
         }
 
         TypeBird tipoElegido = iu.chooseBirdType(playable);
-        int filaElegida = iu.chooseRow(table.getRowCount());
+        int filaElegida;
+        do {
+            filaElegida = iu.chooseRow(table.getRowCount());
+            if (table.isRowBlocked(filaElegida)) {
+                iu.displayMessage("La fila seleccionada está bloqueada. Elige otra fila.");
+            }
+        } while (table.isRowBlocked(filaElegida));
+
         boolean colocarIzquierda = iu.chooseSide();
 
         List<Card> cardsToPlay = player.takeCardsOfSpecies(tipoElegido);
@@ -149,6 +162,9 @@ public class Game {
         if (!player.hasNoCards()) {
             handleCollectionChoice(player);
         }
+
+        handleRowBlockingChoice(player);
+        table.advanceBlockedRows();
     }
 
     // Si el jugador quiere añadir una especie a su zona de juego, se verifica que
@@ -167,10 +183,34 @@ public class Game {
                 List<Card> discarded = player.takeCardsOfSpecies(chosenSpecies);
                 discardedCards.addCards(discarded);
                 iu.displayMessage("Especie añadida a la zona de juego.");
+                if (availableCards == requiredCards) {
+                    this.inverseOrder = !this.inverseOrder;
+                    iu.displayMessage(
+                            "¡¡Bandada exacta detectada!! El sentido del juego se ha invertido.");
+                }
             } else {
                 iu.displayMessage("No es posible bajar esa especie a la zona de juego.");
             }
         }
+    }
+
+    private void handleRowBlockingChoice(Player player) {
+        boolean wantsToBlock = iu.chooseYesNo("¿Deseas bloquear una fila?");
+
+        if (!wantsToBlock) {
+            return;
+        }
+
+        int rowIndex = iu.chooseRow(table.getRowCount());
+        int turns =
+                iu.readNumber("¿Durante cuántos turnos quieres bloquearla? (0 = 1 por defecto): ");
+        if (turns <= 0) {
+            turns = 1;
+        }
+
+        table.blockRow(rowIndex, turns);
+        iu.displayMessage(player.getName() + " ha bloqueado la fila " + (rowIndex + 1) + " durante "
+                + turns + " turno(s).");
     }
 
     // Si el jugador se queda sin cartas, se descartan todas las cartas de los demás
